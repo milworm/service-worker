@@ -4,10 +4,11 @@ var CACHE_NAME = "sw-1",
 	];
 
 self.addEventListener("install", function(event) {
-    event.waitUntil(caches.open(CACHE_NAME).then(function(cache) {
-    	console.log("cache opened");
-    	return cache.addAll(CACHE_URLS);
-    }));
+	console.log("installed");
+    // event.waitUntil(caches.open(CACHE_NAME).then(function(cache) {
+    // 	console.log("cache opened");
+    // 	return cache.addAll(CACHE_URLS);
+    // }));
 });
 
 self.addEventListener("activate", function(event) {
