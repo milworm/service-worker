@@ -5,5 +5,18 @@
 	</head>
 	<body>
 		<h1>from cache</h1>
+
+		<script>
+			navigator.serviceWorker
+			.register("sw.js", {
+				scope: "./"
+			})
+			.then(function(registration) {
+				console.log("success:" + registration.scope);
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+		</script>
 	</body>
 </html>
