@@ -10,7 +10,12 @@ self.addEventListener("install", function(event) {
     }));
 });
 
+self.addEventListener("activate", function(event) {
+	console.log("activated");
+});
+
 self.addEventListener("fetch", function(event) {
+	console.log("fetch");
 	event.respondWith(caches.match(event.request).then(function(response) {
 		if(response) {
 			console.log("fetched from cache");
