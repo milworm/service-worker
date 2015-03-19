@@ -42,8 +42,5 @@ var isCacheable = function(request) {
     if(params.indexOf("nocache") > -1)
         return false;
 
-    var extension = items.pop(),
-        fileName = items.pop();
-
-    return ["css", "js"].indexOf(extension) > -1;
+    return ["css", "js"].indexOf(url.split(".").pop()) > -1;
 }
