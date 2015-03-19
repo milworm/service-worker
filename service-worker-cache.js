@@ -9,21 +9,31 @@ self.addEventListener("install", function(event) {
 });
 
 self.addEventListener("fetch", function(event) {
-    event.respondWith(caches.match(event.request).then(function(response) {
-        if(response) {
-            console.log("fetched from cache");
-            return response;
-        }
+    event.respondWith(Promise.resolve().then(function() {
+        var request = event.request;
 
-        return fetch(event.request);
+        if(! isCacheable(request))
+            return fetch(request);
+
+        return caches.match(request).then(function(response) {
+            if(response)
+                return response;
+
+            return fetch(request).then(function(response) {
+                console.log('Response for %s from network is: %O', request.url, response);
+
+                if (response.status == 200)
+                    cache.put(request.clone(), response.clone());
+
+                return response;
+            });
+        });
     }));
 });
 
-// event.waitUntil(
-//     caches.open(CACHE_NAME).then(function(cache) {
-//         console.log("cache opened");
-//         return cache.addAll(CACHE_URLS);
-//     }).catch(function(error) {
-//         console.log("can't add to cache");
-//     })
-// );
+var isCacheable = function(request) {
+    var url = request.url,
+        extension = url.split(".").reverse()[0];
+
+    return ["css", "js"].indexOf(extension) > -1;
+}
