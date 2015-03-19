@@ -10,6 +10,7 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener("fetch", function(event) {
     event.respondWith(Promise.resolve().then(function() {
+        debugger;
         var request = event.request;
 
         if(! isCacheable(request))
