@@ -24,7 +24,7 @@ self.addEventListener("fetch", function(event) {
                     console.log('Response for %s from network is: %O', request.url, response);
 
                     if (response.status == 200)
-                        cache.put(request.clone(), response.clone());
+                        cache.put(request, response.clone());
 
                     return response;
                 });
