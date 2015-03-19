@@ -10,23 +10,24 @@ self.addEventListener("install", function(event) {
 
 self.addEventListener("fetch", function(event) {
     event.respondWith(Promise.resolve().then(function() {
-        debugger;
-        var request = event.request;
+        if(! isCacheable(event.request))
+            return fetch(event.request);
 
-        if(! isCacheable(request))
-            return fetch(request);
+        var request = event.request.clone();
 
-        return caches.match(request).then(function(response) {
-            if(response)
-                return response;
+        return caches.open(CACHE_NAME).then(function(cache) {
+            return caches.match(request).then(function(response) {
+                if(response)
+                    return response;
 
-            return fetch(request).then(function(response) {
-                console.log('Response for %s from network is: %O', request.url, response);
+                return fetch(request).then(function(response) {
+                    console.log('Response for %s from network is: %O', request.url, response);
 
-                if (response.status == 200)
-                    cache.put(request.clone(), response.clone());
+                    if (response.status == 200)
+                        cache.put(request.clone(), response.clone());
 
-                return response;
+                    return response;
+                });
             });
         });
     }));
