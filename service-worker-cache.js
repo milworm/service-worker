@@ -16,7 +16,7 @@ self.addEventListener("fetch", function(event) {
         var request = event.request.clone();
 
         return caches.open(CACHE_NAME).then(function(cache) {
-            return caches.match(request).then(function(response) {
+            return cache.match(request).then(function(response) {
                 if(response)
                     return response;
 
