@@ -34,8 +34,16 @@ self.addEventListener("fetch", function(event) {
 });
 
 var isCacheable = function(request) {
-    var url = request.url,
-        extension = url.split("?")[0].split(".").pop();
+    var url = request.url
+        items = url.split("?"),
+        url = items[0],
+        params = items[1] || [];
+
+    if(params.indexOf("nocache") > -1)
+        return false;
+
+    var extension = items.pop(),
+        fileName = items.pop();
 
     return ["css", "js"].indexOf(extension) > -1;
 }
