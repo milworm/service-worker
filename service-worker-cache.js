@@ -8,30 +8,30 @@ self.addEventListener("install", function(event) {
     console.log("service worked has been successfully installed");
 });
 
-self.addEventListener("fetch", function(event) {
-    event.respondWith(Promise.resolve().then(function() {
-        if(! isCacheable(event.request))
-            return fetch(event.request);
+// self.addEventListener("fetch", function(event) {
+//     event.respondWith(Promise.resolve().then(function() {
+//         if(! isCacheable(event.request))
+//             return fetch(event.request);
 
-        var request = event.request.clone();
+//         var request = event.request.clone();
 
-        return caches.open(CACHE_NAME).then(function(cache) {
-            return cache.match(request).then(function(response) {
-                if(response)
-                    return response;
+//         return caches.open(CACHE_NAME).then(function(cache) {
+//             return cache.match(request).then(function(response) {
+//                 if(response)
+//                     return response;
 
-                return fetch(request).then(function(response) {
-                    console.log('Response for %s from network is: %O', request.url, response);
+//                 return fetch(request).then(function(response) {
+//                     console.log('Response for %s from network is: %O', request.url, response);
 
-                    if (response.status == 200)
-                        cache.put(request, response.clone());
+//                     if (response.status == 200)
+//                         cache.put(request, response.clone());
 
-                    return response;
-                });
-            });
-        });
-    }));
-});
+//                     return response;
+//                 });
+//             });
+//         });
+//     }));
+// });
 
 var isCacheable = function(request) {
     var url = request.url
