@@ -1,8 +1,12 @@
-importScripts("./cache.js");
+// This polyfill provides Cache.add(), Cache.addAll(), and CacheStorage.match(),
+// which are not implemented in Chrome 40.
 
-var CACHE_NAME = "sw-1",
+importScripts("./cache-polyfill.js");
+
+var CACHE_NAME = "challengeu",
     CACHE_URLS = [
-        "./cached.html"
+        "./css/main.css",
+        "./js/main.js"
     ];
 
 self.addEventListener("install", function(event) {
@@ -10,12 +14,10 @@ self.addEventListener("install", function(event) {
         caches.open(CACHE_NAME).then(function(cache) {
             console.log("cache opened");
             return cache.addAll(CACHE_URLS);
-        })
+        }).catch(function(error) {
+            console.log("can't add to cache");
+        });
     );
-});
-
-self.addEventListener("activate", function(event) {
-    console.log("activated");
 });
 
 self.addEventListener("fetch", function(event) {

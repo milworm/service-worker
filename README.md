@@ -1,1 +1,1 @@
-# service-worker
+# service-worker with simple file caching.
