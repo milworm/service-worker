@@ -33,7 +33,7 @@ self.addEventListener("fetch", function(event) {
 
 var isCacheable = function(request) {
     var url = request.url,
-        extension = url.split(".").reverse()[0];
+        extension = url.split("?")[0].split(".").pop();
 
     return ["css", "js"].indexOf(extension) > -1;
 }
