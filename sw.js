@@ -76,11 +76,31 @@ var fetchAndCache = function(request) {
     });
 }
 
+/**
+ * checks if user requests an index-page or not.
+ * @param {Object} request
+ * @return {Boolean}
+ */
+var isIndexPageRequested = function(request) {
+    var url = request.url;
+
+    if(url.indexOf("index.html") > -1)
+        return true;
+
+    if(url.endsWith("/"))
+        url = url.slice(0, -1);
+
+    if(location.origin == url)
+        return true;
+
+    return false;
+}
+
 self.addEventListener("fetch", function(event) {
     event.respondWith(Promise.resolve().then(function() {
         var request = event.request.clone();
-        debugger;
-        if(request.url == "index")
+
+        if(isIndexPageRequested(request.url))
             return onIndexRequested(request);
         else
             return onResourceRequested(request);
