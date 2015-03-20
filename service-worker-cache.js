@@ -4,43 +4,85 @@ Cache.prototype.add||(Cache.prototype.add=function(t){return this.addAll([t])}),
 
 var CACHE_NAME = "challengeu";
 
-self.addEventListener("install", function(event) {
-    console.log("service worked has been successfully installed");
-});
-
-// self.addEventListener("fetch", function(event) {
-//     event.respondWith(Promise.resolve().then(function() {
-//         if(! isCacheable(event.request))
-//             return fetch(event.request);
-
-//         var request = event.request.clone();
-
-//         return caches.open(CACHE_NAME).then(function(cache) {
-//             return cache.match(request).then(function(response) {
-//                 if(response)
-//                     return response;
-
-//                 return fetch(request).then(function(response) {
-//                     console.log('Response for %s from network is: %O', request.url, response);
-
-//                     if (response.status == 200)
-//                         cache.put(request, response.clone());
-
-//                     return response;
-//                 });
-//             });
-//         });
-//     }));
-// });
-
+/**
+ * @param {Object} request
+ * @return {Boolean}
+ */
 var isCacheable = function(request) {
-    var url = request.url
-        items = url.split("?"),
-        url = items[0],
-        params = items[1] || [];
+    var url = request.url.split("?")[0];
 
-    if(params.indexOf("nocache") > -1)
+    // do not cache service workers.
+    if(url.indexOf("service-worker") > -1)
         return false;
 
+    // cache any css/js file.
     return ["css", "js"].indexOf(url.split(".").pop()) > -1;
 }
+
+/**
+ * @param {Request} request
+ * @return {Promise}
+ */
+var checkInCache = function(request) {
+    return caches.open(CACHE_NAME).then(function(cache) {
+        return cache.match(request);
+    });
+}
+    
+/**
+ * @param {Request} request
+ * @return {Response|Promise}
+ */
+var onIndexRequested = function(request) {
+    if(navigator.onLine)
+        return fetchAndCache(request);
+
+    return checkInCache(request).then(function(response) {
+        if(response)
+            return response;
+        
+        return fetch(request);
+    });
+}
+
+/**
+ * @param {Request} request
+ * @return {Response|Promise}
+ */
+var onResourceRequested = function(request) {
+    if(! isCacheable(request))
+        return fetch(request);
+
+    return checkInCache(request).then(function(response) {
+        if(response)
+            return response;
+
+        return fetchAndCache(request);
+    });
+}
+    
+/**
+ * @param {Request} request
+ * @return {Response}
+ */
+var fetchAndCache = function(request) {
+    fetch(request).then(function(response) {
+        console.log('Response for %s from network is: %O', request.url, response);
+
+        if (response.status == 200)
+            cache.put(request, response.clone());
+
+        return response;
+    });
+}
+
+self.addEventListener("fetch", function(event) {
+    event.respondWith(Promise.resolve().then(function() {
+        var request = event.request.clone();
+        debugger;
+        if(request.url == "index")
+            return onIndexRequested(request);
+        else
+            return onResourceRequested(request);
+    }));
+});
