@@ -146,27 +146,27 @@ var isIndexPageRequested = function(url) {
     return false;
 }
 
-self.addEventListener("install", function(event) {
-    event.waitUntil(Promise.all([
-        // add static files.
-        openCache().then(function(cache) {
-            cache.addAll(CACHE_URLS);
-        }),
+// self.addEventListener("install", function(event) {
+//     event.waitUntil(Promise.all([
+//         // add static files.
+//         openCache().then(function(cache) {
+//             cache.addAll(CACHE_URLS);
+//         }),
 
-        // cleanup old caches.
-        caches.keys().then(function(names) {
-            var methods = names.map(function(name) {
-                if (name == CACHE_NAME)
-                    return ;
+//         // cleanup old caches.
+//         caches.keys().then(function(names) {
+//             var methods = names.map(function(name) {
+//                 if (name == CACHE_NAME)
+//                     return ;
 
-                console.log("Deleting out of date cache:", name);
-                return caches.delete(name);
-            });
+//                 console.log("Deleting out of date cache:", name);
+//                 return caches.delete(name);
+//             });
 
-            return Promise.all(methods);
-        })
-    ]));
-});
+//             return Promise.all(methods);
+//         })
+//     ]));
+// });
 
 self.addEventListener("fetch", function(event) {
     event.respondWith(Promise.resolve().then(function() {
