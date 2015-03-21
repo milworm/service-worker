@@ -96,7 +96,7 @@ var onResourceRequested = function(request) {
  * @return {Response}
  */
 var fetchAndCache = function(request) {
-    fetch(request).then(function(response) {
+    return fetch(request).then(function(response) {
         console.log('Response for %s from network is: %O', request.url, response);
 
         if (response.status == 200)
