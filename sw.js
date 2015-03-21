@@ -12,7 +12,7 @@ var isCacheable = function(request) {
     var url = request.url.split("?")[0];
 
     // do not cache service workers.
-    if(url.indexOf("service-worker") > -1)
+    if(url.indexOf("sw.js") > -1)
         return false;
 
     // cache any css/js file.
