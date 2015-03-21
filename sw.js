@@ -127,6 +127,7 @@ var fetchAndCache = function(request) {
  * @return {Boolean}
  */
 var isIndexPageRequested = function(url) {
+    return false;
     if(url.indexOf("index.html") > -1)
         return true;
 
