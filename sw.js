@@ -144,7 +144,7 @@ var isIndexPageRequested = function(url) {
 }
 
 self.addEventListener("install", function(event) {
-    event.waitUntil(Promise.all(
+    event.waitUntil(Promise.all([
         // add static files.
         openCache().then(function(cache) {
             cache.addAll(CACHE_URLS);
@@ -162,7 +162,7 @@ self.addEventListener("install", function(event) {
 
             return Promise.all(methods);
         })
-    ));
+    ]));
 });
 
 self.addEventListener("fetch", function(event) {
