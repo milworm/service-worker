@@ -34,6 +34,25 @@ var checkInCache = function(request) {
  * @return {Response|Promise}
  */
 var onIndexRequested = function(request) {
+    // we need to make a unique index-url, in order to avoid potential 
+    // cache problems when user requests:
+    // http://app.com/root_path/index.html
+    // http://app.com/root_path/
+    // http://app.com/root_path
+    // http://app.com/index.html
+    // http://app.com/
+    // http://app.com
+
+    var indexUrl = request.url;
+
+    if(indexUrl.endsWith("/"))
+        indexUrl = indexUrl.slice(0, -1);
+
+    if(indexUrl.indexOf("index.html") == -1)
+        indexUrl += "/index.html";
+
+    request = new Request(indexUrl);
+
     if(navigator.onLine)
         return fetchAndCache(request);
 
@@ -78,12 +97,10 @@ var fetchAndCache = function(request) {
 
 /**
  * checks if user requests an index-page or not.
- * @param {Object} request
+ * @param {String} url
  * @return {Boolean}
  */
-var isIndexPageRequested = function(request) {
-    var url = request.url;
-
+var isIndexPageRequested = function(url) {
     if(url.indexOf("index.html") > -1)
         return true;
 
@@ -91,6 +108,13 @@ var isIndexPageRequested = function(request) {
         url = url.slice(0, -1);
 
     if(location.origin == url)
+        return true;
+
+    url = url.replace(location.origin, "");
+
+    // check if user requested:
+    // /root_path
+    if(url.split("/").pop().split(".").length == 1)
         return true;
 
     return false;
