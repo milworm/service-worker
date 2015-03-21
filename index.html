@@ -3,10 +3,20 @@
 	<head>
 		<title></title>
 		
-		<link rel="stylesheet" type="text/css" href="./css/main.css?v=1" />
-		<script src="./js/main.js?v=1"></script>
+		<link rel="stylesheet" type="text/css" href="./css/main.css?v=2" />
+		<script src="./js/main.js?v=2"></script>
 	</head>
 	<body>
 		<h1>index.html</h1>
+
+		<script>
+			navigator.serviceWorker.register("sw.js?v=2", {
+			    scope: "./"
+			}).then(function(registration) {
+			    console.log("success", registration);
+			}).catch(function(error) {
+			    console.log("failure:", error);
+			});
+		</script>
 	</body>
 </html>
