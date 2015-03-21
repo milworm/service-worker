@@ -161,8 +161,8 @@ self.addEventListener("install", function(event) {
             });
 
             return Promise.all(methods);
-        });
-    );
+        })
+    ));
 });
 
 self.addEventListener("fetch", function(event) {
