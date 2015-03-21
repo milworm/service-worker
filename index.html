@@ -10,7 +10,13 @@
 		<h1>index.html</h1>
 
 		<script>
-			navigator.serviceWorker.register("sw.js", { scope: "./" });
+			navigator.serviceWorker.register("sw.js", { 
+				scope: "./" 
+			}).then(function(registration) {
+				console.log(registration);
+			}).catch(function(error) {
+				console.log(error);
+			});
 		</script>
 	</body>
 </html>
