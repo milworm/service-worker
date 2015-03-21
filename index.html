@@ -15,9 +15,11 @@
 			}).then(function(registration) {
 				if(registration.active)
 					console.log("active", registration.active);
-				else if(registration.waiting)
+
+				if(registration.waiting)
 					console.log("waiting", registration.waiting);
-				else if(registration.installing)
+				
+				if(registration.installing)
 					console.log("installing", registration.installing);
 			}).catch(function(error) {
 				console.log(error);
