@@ -62,7 +62,7 @@ var onIndexRequested = function(request) {
     if(indexUrl.indexOf("index.html") == -1)
         indexUrl += "/index.html";
 
-    request = new Request(indexUrl);
+    // request = new Request(indexUrl);
 
     if(navigator.onLine)
         return fetchAndCache(request);
