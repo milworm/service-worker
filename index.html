@@ -13,7 +13,12 @@
 			navigator.serviceWorker.register("sw.js", { 
 				scope: "./" 
 			}).then(function(registration) {
-				console.log(registration);
+				if(registration.active)
+					console.log("active", registration.active);
+				else if(registration.waiting)
+					console.log("waiting", registration.waiting);
+				else if(registration.installing)
+					console.log("installing", registration.installing);
 			}).catch(function(error) {
 				console.log(error);
 			});
